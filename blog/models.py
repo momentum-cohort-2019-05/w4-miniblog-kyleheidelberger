@@ -20,15 +20,15 @@ class BlogPost(models.Model):
 
     post_date = models.DateField(auto_now_add=True)
 
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-        help_text='Unique ID for this post across whole site',
-    )
+    # id = models.UUIDField(
+    #     primary_key=True,
+    #     default=uuid.uuid4,
+    #     editable=False,
+    #     help_text='Unique ID for this post across whole site',
+    # )
 
     class Meta:
-        ordering = ['post_date']
+        ordering = ['-post_date']
 
     def __str__(self):
         """
@@ -40,55 +40,70 @@ class BlogPost(models.Model):
         """
         Returns the url to access a page for this blog post.
         """
-        return reverse('blog-post', args=[str(self.id)])
+        return reverse('blog-detail', args=[str(self.id)])
 
 
-class Comment(models.Model):
+class BlogComment(models.Model):
     """
     Model representing a comment on a specific blog post.
     """
-    name = models.TextField(max_length=500,
+    text = models.TextField(max_length=500,
                             help_text="Enter your comment here.")
     post_date = models.DateTimeField(auto_now_add=True)
 
     # Foreign Key used because Comment can only have one Author, but authors can have multiple comments
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    blog = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
 
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-        help_text='Unique ID for this comment across whole site',
-    )
+    # id = models.UUIDField(
+    #     primary_key=True,
+    #     default=uuid.uuid4,
+    #     editable=False,
+    #     help_text='Unique ID for this comment across whole site',
+    # )
 
     def __str__(self):
         """
-        String for representing the Model object (in Admin site etc.)
+        String for representing the Model object.
         """
-        return self.name
+        len_title = 75
+        if len(self.text) > len_title:
+            titlestring = self.text[:len_title] + '...'
+        else:
+            titlestring = self.text
+        return titlestring
+
+    class Meta:
+        ordering = ['post_date']
 
 
 class Blogger(models.Model):
     """
     Model representing a user that posts a blog post."
     """
-    blogger = models.ForeignKey(User,
-                                on_delete=models.SET_NULL,
-                                null=True,
-                                blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-        help_text='Unique ID for this post across whole site',
-    )
+    # id = models.UUIDField(
+    #     primary_key=True,
+    #     default=uuid.uuid4,
+    #     editable=False,
+    #     help_text='Unique ID for this post across whole site',
+    # )
 
-    bio = models.TextField(max_length=1000,
+    bio = models.TextField(max_length=500,
                            help_text='A brief biography of the user')
 
     def __str__(self):
         """
         String for representing the Model object (in Admin site etc.)
         """
-        return self.name
+        return self.user.username
+
+    def get_absolute_url(self):
+        """
+        Returns the url to access a particular blog-author instance.
+        """
+        return reverse('blogs-by-author', args=[str(self.id)])
+
+    class Meta:
+        ordering = ['user', 'bio']

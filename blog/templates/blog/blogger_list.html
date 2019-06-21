@@ -4,10 +4,10 @@
 <h1>Blogger List</h1>
 {% if blogger_list %}
 <ul>
-    {% for blogger in blogger_list %}
+    {% for author in blogger_list %}
     <li>
-        <a href="{ url 'blogger-detail' blogger.pk }">
-            {{ blogger }}
+        <a href="{% url 'blogs-by-author' author.pk %}">
+            {{ author }}
         </a>
     </li>
     {% endfor %}
