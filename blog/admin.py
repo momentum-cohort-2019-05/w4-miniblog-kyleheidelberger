@@ -32,7 +32,7 @@ class BlogCommentsInline(admin.TabularInline):
     Used to show 'existing' blog comments inline below associated blogs
     """
     model = BlogComment
-    max_num = 0
+    # max_num = 0
 
 
 class BlogPostAdmin(admin.ModelAdmin):

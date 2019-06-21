@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse  # used to generate URLs by reversing the URL patterns
 from django.contrib.auth.models import User
 from datetime import date, datetime
-import uuid
+# import uuid
 
 # Create your models here.
 

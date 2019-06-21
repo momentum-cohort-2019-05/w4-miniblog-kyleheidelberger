@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from blog.models import BlogPost, BlogComment, Blogger
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
@@ -104,7 +104,7 @@ class BlogCommentCreate(LoginRequiredMixin, CreateView):
         # Call the base implementation first to get a context
         context = super(BlogCommentCreate, self).get_context_data(**kwargs)
         # Get the blog from id and add it to the context
-        context['blog'] = get_object_or_404(Blog, pk=self.kwargs['pk'])
+        context['blogpost'] = get_object_or_404(BlogPost, pk=self.kwargs['pk'])
         return context
 
     def form_valid(self, form):
@@ -114,7 +114,7 @@ class BlogCommentCreate(LoginRequiredMixin, CreateView):
         #Add logged-in user as author of comment
         form.instance.author = self.request.user
         #Associate comment with blog based on passed id
-        form.instance.blog = get_object_or_404(Blog, pk=self.kwargs['pk'])
+        form.instance.blog = get_object_or_404(BlogPost, pk=self.kwargs['pk'])
         # Call super-class form validation behaviour
         return super(BlogCommentCreate, self).form_valid(form)
 
