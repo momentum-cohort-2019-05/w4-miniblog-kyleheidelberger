@@ -72,7 +72,7 @@ class Blogger(models.Model):
     """
     Model representing a user that posts a blog post."
     """
-    name = models.CharField(User, max_length=20, help_text="Blogger Username")
+    blogger = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     id = models.UUIDField(
         primary_key=True,
