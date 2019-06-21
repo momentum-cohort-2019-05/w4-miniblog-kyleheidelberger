@@ -34,7 +34,7 @@ class BlogPost(models.Model):
         """
         String for representing the Model object (in Admin site etc.)
         """
-        return self.name
+        return self.title
 
     def get_absolute_url(self):
         """
@@ -72,7 +72,10 @@ class Blogger(models.Model):
     """
     Model representing a user that posts a blog post."
     """
-    blogger = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    blogger = models.ForeignKey(User,
+                                on_delete=models.SET_NULL,
+                                null=True,
+                                blank=True)
 
     id = models.UUIDField(
         primary_key=True,

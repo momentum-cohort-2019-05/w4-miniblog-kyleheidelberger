@@ -2,11 +2,11 @@
 
 {% block content %}
 <h1>Blog List</h1>
-{% if blog_list %}
+{% if blogpost_list %}
 <ul>
-    {% for blog in blog_list %}
+    {% for blog in blogpost_list %}
     <li>
-        <a href="{% url 'blog-post' blog.pk }">{{ blog.Blogpost.title }}</a> ({{blog.author}})
+        <a href="{% url 'blog-post' blogpost.pk }">{{ blog.title }}</a> ({{blog.post_date}}) -- {{blog.author}}
     </li>
     {% endfor %}
 </ul>
