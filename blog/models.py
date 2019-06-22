@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse  # used to generate URLs by reversing the URL patterns
 from django.contrib.auth.models import User
 from datetime import date, datetime
-# import uuid
 
 # Create your models here.
 
@@ -13,19 +12,13 @@ class BlogPost(models.Model):
     """
     title = models.CharField(max_length=200,
                              help_text="Enter title of blog post here.")
-    post = models.TextField(help_text="Enter text of your blog post here.")
+    post = models.TextField(max_length=3000,
+                            help_text="Enter text of your blog post here.")
 
     # Foreign Key used because BlogPost can only have one Author, but authors can have multiple BlogPosts
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey('Blogger', on_delete=models.SET_NULL, null=True)
 
     post_date = models.DateField(auto_now_add=True)
-
-    # id = models.UUIDField(
-    #     primary_key=True,
-    #     default=uuid.uuid4,
-    #     editable=False,
-    #     help_text='Unique ID for this post across whole site',
-    # )
 
     class Meta:
         ordering = ['-post_date']
@@ -52,15 +45,8 @@ class BlogComment(models.Model):
     post_date = models.DateTimeField(auto_now_add=True)
 
     # Foreign Key used because Comment can only have one Author, but authors can have multiple comments
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey('Blogger', on_delete=models.SET_NULL, null=True)
     blog = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
-
-    # id = models.UUIDField(
-    #     primary_key=True,
-    #     default=uuid.uuid4,
-    #     editable=False,
-    #     help_text='Unique ID for this comment across whole site',
-    # )
 
     def __str__(self):
         """
@@ -82,13 +68,6 @@ class Blogger(models.Model):
     Model representing a user that posts a blog post."
     """
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-
-    # id = models.UUIDField(
-    #     primary_key=True,
-    #     default=uuid.uuid4,
-    #     editable=False,
-    #     help_text='Unique ID for this post across whole site',
-    # )
 
     bio = models.TextField(max_length=500,
                            help_text='A brief biography of the user')

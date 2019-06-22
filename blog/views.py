@@ -4,6 +4,7 @@ from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User  #Blog author or commenter
 
 # Create your views here.
 
@@ -24,6 +25,18 @@ def index(request):
     return render(
         request,
         'index.html',
+    )
+
+def all_users(request):
+    users = User.objects.all()
+
+    context = {
+        'users' : users,
+    }
+
+    return render(
+        request,
+        'blogger_list.html',
     )
 
 
