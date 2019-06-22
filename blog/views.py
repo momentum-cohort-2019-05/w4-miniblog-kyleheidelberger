@@ -27,11 +27,12 @@ def index(request):
         'index.html',
     )
 
+
 def all_users(request):
     users = User.objects.all()
 
     context = {
-        'users' : users,
+        'users': users,
     }
 
     return render(
@@ -58,9 +59,32 @@ class BloggerDetailView(generic.DetailView):
     model = Blogger
 
 
-class BlogPostCreate(CreateView):
+class BlogPostCreate(LoginRequiredMixin, CreateView):
     model = BlogPost
-    fields = '__all__'
+    fields = [
+        'title',
+        'post',
+        'author',
+    ]
+
+    # def form_valid(self, form):
+    #     """
+    #     Add author and associated blog to form data before setting it as valid (so it is saved to model)
+    #     """
+    #     #Add logged-in user as author of post
+    #     form.instance.author = self.request.user
+    #     #Associate comment with author based on passed id
+    #     # form.instance.blogger = get_object_or_404(Blogger, pk=self.kwargs['pk'])
+    #     # Call super-class form validation behaviour
+    #     return super(BlogPostCreate, self).form_valid(form)
+
+    # def get_success_url(self):
+    #     """
+    #     After posting comment return to associated blog.
+    #     """
+    #     return reverse('blog-detail', kwargs={
+    #         'pk': self.kwargs['pk'],
+    #     })
 
 
 class BlogPostUpdate(UpdateView):
