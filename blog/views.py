@@ -15,16 +15,21 @@ def index(request):
     """
 
     # Generate counts of some of the main objects
-    num_blog_posts = BlogPost.objects.all().count()
+    num_blog_posts = BlogPost.objects.count()
+    comment_count = BlogComment.objects.count()
+    active_users = Blogger.objects.count()
 
     context = {
         'num_blog_posts': num_blog_posts,
+        'comment_count': comment_count,
+        'active_users': active_users,
     }
 
     # Render the HTML template index.html with the data in the context variable
     return render(
         request,
         'index.html',
+        context=context,
     )
 
 

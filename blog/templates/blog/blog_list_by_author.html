@@ -9,13 +9,13 @@
 
 
 
-{% if blog_list %}
+{% if blogpost_list %}
 <h3>Blogs list</h3>
 <ul>
 
-    {% for blog in blog_list %}
+    {% for blog in blogpost_list %}
     <li>
-        <a href="{{ blog.get_absolute_url }}">{{ blog.name }}</a> ({{blog.post_date}})</a>
+        <a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a> ({{blog.post_date}})</a>
     </li>
     {% endfor %}
 
