@@ -28,19 +28,6 @@ def index(request):
     )
 
 
-def all_users(request):
-    users = User.objects.all()
-
-    context = {
-        'users': users,
-    }
-
-    return render(
-        request,
-        'blogger_list.html',
-    )
-
-
 class BlogListView(generic.ListView):
     model = BlogPost
     paginate_by = 5
@@ -59,47 +46,6 @@ class BloggerDetailView(generic.DetailView):
     model = Blogger
 
 
-class BlogPostCreate(LoginRequiredMixin, CreateView):
-    model = BlogPost
-    fields = [
-        'title',
-        'post',
-        'author',
-    ]
-
-    # def form_valid(self, form):
-    #     """
-    #     Add author and associated blog to form data before setting it as valid (so it is saved to model)
-    #     """
-    #     #Add logged-in user as author of post
-    #     form.instance.author = self.request.user
-    #     #Associate comment with author based on passed id
-    #     # form.instance.blogger = get_object_or_404(Blogger, pk=self.kwargs['pk'])
-    #     # Call super-class form validation behaviour
-    #     return super(BlogPostCreate, self).form_valid(form)
-
-    # def get_success_url(self):
-    #     """
-    #     After posting comment return to associated blog.
-    #     """
-    #     return reverse('blog-detail', kwargs={
-    #         'pk': self.kwargs['pk'],
-    #     })
-
-
-class BlogPostUpdate(UpdateView):
-    model = BlogPost
-    fields = [
-        'title',
-        'post',
-    ]
-
-
-class BlogPostDelete(DeleteView):
-    model = BlogPost
-    success_url = reverse_lazy('blogs')
-
-
 class BlogListbyAuthorView(generic.ListView):
     model = BlogPost
     paginate_by = 5
@@ -107,11 +53,11 @@ class BlogListbyAuthorView(generic.ListView):
 
     def get_queryset(self):
         """
-        Return list of Blog objects created by BlogAuthor (author id specified in URL)
+        Return list of Blog objects created by Blogger (author id specified in URL)
         """
         id = self.kwargs['pk']
-        target_author = get_object_or_404(BlogAuthor, pk=id)
-        return Blog.objects.filter(author=target_author)
+        target_author = get_object_or_404(Blogger, pk=id)
+        return BlogPost.objects.filter(author=target_author)
 
     def get_context_data(self, **kwargs):
         """
@@ -120,8 +66,7 @@ class BlogListbyAuthorView(generic.ListView):
         # Call the base implementation first to get a context
         context = super(BlogListbyAuthorView, self).get_context_data(**kwargs)
         # Get the blogger object from the "pk" URL parameter and add it to the context
-        context['blogger'] = get_object_or_404(BlogAuthor,
-                                               pk=self.kwargs['pk'])
+        context['blogger'] = get_object_or_404(Blogger, pk=self.kwargs['pk'])
         return context
 
 
@@ -162,3 +107,42 @@ class BlogCommentCreate(LoginRequiredMixin, CreateView):
         return reverse('blog-detail', kwargs={
             'pk': self.kwargs['pk'],
         })
+
+
+# class BlogPostCreate(LoginRequiredMixin, CreateView):
+#     model = BlogPost
+#     fields = [
+#         'title',
+#         'post',
+#         'author',
+#     ]
+
+# def form_valid(self, form):
+#     """
+#     Add author and associated blog to form data before setting it as valid (so it is saved to model)
+#     """
+#     #Add logged-in user as author of post
+#     form.instance.author = self.request.user
+#     #Associate comment with author based on passed id
+#     # form.instance.blogger = get_object_or_404(Blogger, pk=self.kwargs['pk'])
+#     # Call super-class form validation behaviour
+#     return super(BlogPostCreate, self).form_valid(form)
+
+# def get_success_url(self):
+#     """
+#     After posting comment return to associated blog.
+#     """
+#     return reverse('blog-detail', kwargs={
+#         'pk': self.kwargs['pk'],
+#     })
+
+# class BlogPostUpdate(UpdateView):
+#     model = BlogPost
+#     fields = [
+#         'title',
+#         'post',
+#     ]
+
+# class BlogPostDelete(DeleteView):
+#     model = BlogPost
+#     success_url = reverse_lazy('blogs')
